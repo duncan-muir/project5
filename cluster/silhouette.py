@@ -29,14 +29,20 @@ class Silhouette:
         scores = []
         ks = np.max(y) + 1
         centroids = np.zeros((ks, 2))
+
+        # get centroids based on provided labels
         for k in range(ks):
             centroids[k] = np.average(X[y == k], axis=0)
+
         for x, lab in zip(X, y):
 
+            # compute average distance between point and all others in own cluster
             a = np.average(cdist(x[np.newaxis, ...], X[y == lab], metric=self._metric))
 
-            # print(centroids)
+            # compute min distance to non-self cluster centroid
             b = np.min(cdist(x[np.newaxis, ...], centroids[np.arange(len(centroids)) != lab]))
+
+            # compute final silhouette score
             score = (b - a) / max(a, b)
             scores.append(score)
 
