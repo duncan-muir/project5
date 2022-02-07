@@ -9,6 +9,8 @@ class Silhouette:
                 the name of the distance metric to use
         """
 
+        self._metric = metric
+
     def score(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
         """
         calculates the silhouette score for each of the observations
@@ -24,5 +26,19 @@ class Silhouette:
             np.ndarray
                 a 1D array with the silhouette scores for each of the observations in `X`
         """
+        scores = []
+        ks = np.max(y) + 1
+        centroids = np.zeros((ks, 2))
+        for k in range(ks):
+            centroids[k] = np.average(X[y == k], axis=0)
+        for x, lab in zip(X, y):
 
+            a = np.average(cdist(x[np.newaxis, ...], X[y == lab], metric=self._metric))
+
+            # print(centroids)
+            b = np.min(cdist(x[np.newaxis, ...], centroids[np.arange(len(centroids)) != lab]))
+            score = (b - a) / max(a, b)
+            scores.append(score)
+
+        return np.array(scores)
 
