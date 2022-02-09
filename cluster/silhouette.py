@@ -39,12 +39,14 @@ class Silhouette:
             # compute average distance between point and all others in own cluster
             a = np.average(cdist(x[np.newaxis, ...], X[y == lab], metric=self._metric))
 
-            # compute min distance to non-self cluster centroid
-            b = np.min(cdist(x[np.newaxis, ...], centroids[np.arange(len(centroids)) != lab]))
+            # compute mean distance to non-self cluster
+            non_self_mean_dists = [np.average(cdist(x[np.newaxis, ...], X[y == other_k], metric=self._metric))
+                                   for other_k in range(ks) if other_k != lab]
+
+            b = min(non_self_mean_dists)
 
             # compute final silhouette score
             score = (b - a) / max(a, b)
             scores.append(score)
-
         return np.array(scores)
 

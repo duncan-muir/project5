@@ -12,7 +12,8 @@ class KMeans:
             k: int,
             metric: str = "euclidean",
             tol: float = 1e-6,
-            max_iter: int = 100):
+            max_iter: int = 100,
+            rand: np.random.RandomState = np.random.RandomState()):
         """
         inputs:
             k: int
@@ -23,6 +24,8 @@ class KMeans:
                 the minimum error tolerance from previous error during optimization to quit the model fit
             max_iter: int
                 the maximum number of iterations before quitting model fit
+            rand: np.random.RandomState
+                random state used in centroid initialization, and to allow consistency for testing
         """
 
         self._k = k
@@ -33,6 +36,7 @@ class KMeans:
         self._max_iter = max_iter
         self._centroids = np.zeros((self._k, 2))
         self._error = float("inf")
+        self._rand = rand
     
     def fit(self, mat: np.ndarray) -> None:
         """
@@ -46,12 +50,11 @@ class KMeans:
         if len(mat) < self._k:
             raise ClusteringException("Number of observations must be >= k")
 
-        # init random (psuedo) labels
-        # weird behavior can happen where randint doesnt fully sample k, which is necessary for algorithm
-        # so this ensures at least every label appears once
-        seed_labels = np.arange(self._k)
-        labels = np.concatenate((np.random.randint(0, self._k, size=len(mat) - self._k), seed_labels))
-        np.random.shuffle(labels)
+        # init random centroids
+        self._centroids = mat[self._rand.choice(mat.shape[0], self._k, replace=False), :]
+
+        # init labels from random centroids
+        labels = self.predict(mat)
 
         curr_iter = 0
 

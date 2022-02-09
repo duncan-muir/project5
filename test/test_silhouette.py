@@ -31,7 +31,7 @@ def test_sillhouette_kmeans_2(test_clusters):
     s = Silhouette()
 
     assert np.allclose(s.score(test_clusters, k2_labels),
-                       np.tile([0.71603434, 0.76583592], 4), .001)
+                       np.tile([0.72233205, 0.76943494], 4), .001)
 
 
 def test_sillhouette_kmeans_4(test_clusters):
@@ -44,6 +44,6 @@ def test_sillhouette_kmeans_4(test_clusters):
     s = Silhouette()
 
     assert np.allclose(s.score(test_clusters, k4_labels),
-                       0.7574637 * np.ones(len(k4_labels)), .001)
+                       0.76393202 * np.ones(len(k4_labels)), .001)
 
 

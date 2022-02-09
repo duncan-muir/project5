@@ -18,7 +18,6 @@ def main():
     # clusters, labels = make_clusters(scale=2)
     # plot_clusters(clusters, labels, filename="figures/loose_clusters.png")
 
-    np.random.seed(27)
 
     """
     uncomment this section once you are ready to visualize your kmeans + silhouette implementation
@@ -26,7 +25,7 @@ def main():
     clusters, labels = make_clusters(k=4, scale=1)
     km = KMeans(k=4)
     km.fit(clusters)
-    plot_clusters(clusters, labels, filename="figures/test_clusters.png")
+    #plot_clusters(clusters, labels, filename="figures/test_clusters.png")
     pred = km.predict(clusters)
     scores = Silhouette().score(clusters, pred)
     plot_multipanel(clusters, labels, pred, scores)
